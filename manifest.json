@@ -1,0 +1,24 @@
+{
+    "name"              : "Chinese Taipei 中華臺北",
+    "short_name"        : "中華臺北",
+    "description"       : "將所有「臺灣」取代為「中華臺北」以符合國人期待。",
+
+    "version"           : "0.1",
+    "minimum_chrome_version": "40",
+
+    "manifest_version"  : 2,
+    "icons"             : {
+        "16"        : "icons/tpe-16.png",
+        "48"        : "icons/tpe-48.png",
+        "128"       : "icons/tpe-128.png"
+    },
+    "content_scripts"   : [{
+        "matches"   : [ "http://*/*",
+                        "https://*/*" ],
+        "js"        : ["tpe.js"],
+        "run_at"    : "document_end"
+    }],
+    "permissions"       : ["tabs",
+                           "storage"],
+    "content_security_policy": "script-src 'self' https://*.google-analytics.com ; object-src 'self'"
+}
