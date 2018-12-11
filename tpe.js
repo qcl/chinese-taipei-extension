@@ -1,8 +1,3 @@
-if (chrome) {
-    var manifest = chrome.runtime.getManifest();
-    console.log(manifest);
-}
-
 console.log("Load tpe.js");
 
 let replacementTable = {
@@ -21,51 +16,56 @@ let replacementTable = {
     "歹丸": "種花台北",
 };
 
-let processing = false;
-let needCheck = false;
+let replacements = [];
+
+for(keyword in replacementTable) {
+    let replacement = replacementTable[keyword];
+    replacements.push({
+        "replace": new RegExp(keyword, 'g'),
+        "to": replacement
+    });
+}
 
 let replace = (node) => {
-    console.log('replace called for'+node.nodeName);
+    if (node.nodeName == "#text" && node.textContent.length > 0) {
+        let text = node.textContent;
 
-    if (!node.innerHTML || node.innerHTML.length == 0) {
-        return;
+        replacements.forEach((replacement) => {
+            text = text.replace(replacement.replace, replacement.to);
+        });
+
+        if (text != node.textContent) {
+            //console.log(node.textContent + ' -> ' + text);
+            node.textContent = text;
+        }
+    } else {
+        node.childNodes.forEach((childNode) => {
+            replace(childNode);
+        });
     }
-
-    processing = true;
-    let html = node.innerHTML;
-    for (keyword in replacementTable) {
-        let replacement = replacementTable[keyword];
-        let re = new RegExp(keyword, 'g');
-
-        html = html.replace(re, replacement);
-    }
-    node.innerHTML = html
-    needCheck = false;
-    processing = false;
 };
 
-/*let taiwanObserver = new window.MutationObserver((mutationList, observer) => {
-    if (processing) {
-        return;
-    } else {
-        needCheck = true;
-    }
-});*/
+let taiwanObserver = new window.MutationObserver((mutationList, observer) => {
+    mutationList.forEach((mutation) => {
+        let type = mutation.type;
+        if (type != "childList") {
+            return;
+        }
+
+        let addedNodes = mutation.addedNodes;
+        addedNodes.forEach((node) => {
+            if (["SCRIPT", "STYLE"].indexOf(node.nodeName) >= 0) {
+                return;
+            }
+
+            replace(node);
+        });
+    });
+});
 
 replace(document.body);
 
-/*
 taiwanObserver.observe(document, {
     subtree: true,
     childList: true
 });
-
-let checkTimer = setInterval(() => {
-    console.log('time for checking');
-    if (needCheck) {
-        console.log('need to check');
-        replace(document.body);
-    } else {
-        console.log('no need');
-    }
-}, 5000);*/
