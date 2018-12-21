@@ -4,6 +4,7 @@ let replacementTable = {
     "臺灣" : "中華臺北",
     "台灣" : "中華台北",
     "台湾" : "中华台北",
+    "taiwan": "chinese taipei",
     "Taiwan": "Chinese Taipei",
     "TAIWAN": "CHINESE TAIPEI",
     "中華民國": "中華臺北",
