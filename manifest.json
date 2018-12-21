@@ -3,7 +3,7 @@
     "short_name"        : "中華臺北",
     "description"       : "將所有「臺灣」取代為「中華臺北」以符合國人期待。",
 
-    "version"           : "0.1",
+    "version"           : "0.2",
     "minimum_chrome_version": "40",
 
     "manifest_version"  : 2,
@@ -16,8 +16,10 @@
         "matches"   : [ "http://*/*",
                         "https://*/*" ],
         "js"        : ["tpe.js"],
+        "css"       : ["tpe.css"],
         "run_at"    : "document_end"
     }],
+    "web_accessible_resources": ["TpeFlagFont.tff", "tpe.png"],
     "permissions"       : ["tabs",
                            "storage"],
     "content_security_policy": "script-src 'self' https://*.google-analytics.com ; object-src 'self'"

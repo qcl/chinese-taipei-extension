@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'tpe-flag-font';
+    src: url('chrome-extension://__MSG_@@extension_id__/TpeFlagFont.tff');
+}
+
+.tpe-flag-font {
+    font-family: 'tpe-flag-font' !important;
+}
+

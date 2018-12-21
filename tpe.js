@@ -27,6 +27,7 @@ for(keyword in replacementTable) {
 }
 
 let replace = (node) => {
+    let needReplceFlag = false;
     if (node.nodeName == "#text" && node.textContent.length > 0) {
         let text = node.textContent;
 
@@ -38,11 +39,29 @@ let replace = (node) => {
             //console.log(node.textContent + ' -> ' + text);
             node.textContent = text;
         }
+
+        if (text.indexOf("🇹🇼") >= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } else if (node.nodeName == "IMG") {
+        // Special case for replacing emoji for Facebook and Twitter
+        if (node.alt && node.alt == "🇹🇼" && node.src && node.src.indexOf("emoji") > 0) {
+            node.src = chrome.extension.getURL("tpe.png");
+        }
     } else {
         node.childNodes.forEach((childNode) => {
-            replace(childNode);
+            needReplceFlag = needReplceFlag || replace(childNode);
         });
+        if (needReplceFlag) {
+            if (!node.classList.contains("tpe-flag-font")) {
+                node.classList.add("tpe-flag-font");
+            }
+        }
     }
+
+    return false;
 };
 
 let taiwanObserver = new window.MutationObserver((mutationList, observer) => {
