@@ -1,30 +1,15 @@
 console.log("Load tpe.js");
 
-let replacementTable = {
-    "臺灣" : "中華臺北",
-    "台灣" : "中華台北",
-    "台湾" : "中华台北",
-    "taiwan": "chinese taipei",
-    "Taiwan": "Chinese Taipei",
-    "TAIWAN": "CHINESE TAIPEI",
-    "中華民國": "中華臺北",
-    "中华民国": "中华台北",
-    "R.O.C." : "Chinese Taipei",
-    "Republic of China": "Chinese Taipei",
-    "Republic Of China": "Chinese Taipei",
-    "呆丸": "種花台北",
-    "逮丸": "種花台北",
-    "歹丸": "種花台北",
-};
-
 let replacements = [];
 
-for(keyword in replacementTable) {
-    let replacement = replacementTable[keyword];
-    replacements.push({
-        "replace": new RegExp(keyword, 'g'),
-        "to": replacement
-    });
+let updateReplacements = (replacementTable) => {
+    for(keyword in replacementTable) {
+        let replacement = replacementTable[keyword];
+        replacements.push({
+            "replace": new RegExp(keyword, 'g'),
+            "to": replacement
+        });
+    }
 }
 
 let replace = (node) => {
@@ -49,7 +34,7 @@ let replace = (node) => {
     } else if (node.nodeName == "IMG") {
         // Special case for replacing emoji for Facebook and Twitter
         if (node.alt && node.alt == "🇹🇼" && node.src && node.src.indexOf("emoji") > 0) {
-            node.src = chrome.extension.getURL("tpe.png");
+            node.src = chrome.runtime.getURL("tpe.png");
         }
     } else {
         node.childNodes.forEach((childNode) => {
@@ -83,9 +68,17 @@ let taiwanObserver = new window.MutationObserver((mutationList, observer) => {
     });
 });
 
-replace(document.body);
+fetch(chrome.runtime.getURL("replacement.json")).then((response) => {
+    return response.json();
+}).then((jsonObject => {
+    let replacementTable = jsonObject;
+    updateReplacements(replacementTable);
+    replace(document.body);
 
-taiwanObserver.observe(document, {
-    subtree: true,
-    childList: true
-});
+    taiwanObserver.observe(document, {
+        subtree: true,
+        childList: true
+    });
+}));
+
+
