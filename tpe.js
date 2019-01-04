@@ -35,6 +35,8 @@ let replace = (node) => {
         // Special case for replacing emoji for Facebook and Twitter
         if (node.alt && node.alt == "🇹🇼" && node.src && node.src.indexOf("emoji") > 0) {
             node.src = chrome.runtime.getURL("tpe.png");
+        } else if (node.src && node.src.indexOf("1f1f9_1f1fc") > 0 && node.src.indexOf("emoji.php") > 0) {
+            node.src = chrome.runtime.getURL("tpe.png");
         }
     } else {
         node.childNodes.forEach((childNode) => {
@@ -43,6 +45,10 @@ let replace = (node) => {
         if (needReplceFlag) {
             if (!node.classList.contains("tpe-flag-font")) {
                 node.classList.add("tpe-flag-font");
+            }
+            // Special case for replace emoji background for Facebook
+            if (node.style.backgroundImage.indexOf("emoji.php") > 0) {
+                node.style.backgroundImage = 'url("' + chrome.runtime.getURL("tpe.png") + '")';
             }
         }
     }

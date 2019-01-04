@@ -3,7 +3,7 @@
     "short_name"        : "中華臺北",
     "description"       : "將所有「臺灣」取代為「中華臺北」以符合國人期待。",
 
-    "version"           : "0.3",
+    "version"           : "0.3.1",
     "minimum_chrome_version": "40",
 
     "manifest_version"  : 2,
