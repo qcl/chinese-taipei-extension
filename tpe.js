@@ -46,7 +46,7 @@ let replace = (node) => {
             if (!node.classList.contains("tpe-flag-font")) {
                 node.classList.add("tpe-flag-font");
             }
-            // Special case for replace emoji background for Facebook
+            // Special case for replacing emoji background for Facebook
             if (node.style.backgroundImage.indexOf("emoji.php") > 0) {
                 node.style.backgroundImage = 'url("' + chrome.runtime.getURL("tpe.png") + '")';
             }
